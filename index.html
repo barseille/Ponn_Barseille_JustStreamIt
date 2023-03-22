@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="description"
+      content="Consulte le classement de tes films préférés en temps réels."
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JustStreamIt - Accueil</title>
+    <link rel="stylesheet" href="style.css" />
+    <script
+      src="https://kit.fontawesome.com/051e9bb83a.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <nav>
+        <div class="nav_container">
+          <h1 class="logo">JustStreamIt</h1>
+          <ul class="nav_links">
+            <li class=""><a class="lien" href="#">Accueil</a></li>
+            <li><a class="lien" href="#">Catégories</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <section>
+      <div class="cover_movie">
+        <img src="#" alt="Meilleur film" />
+
+
+        <div class="cover_movie_infos">
+          <h2 class="cover_title"></h2>
+
+          <button id="myBtn">Ouvrir le modal</button>
+          
+          <!-- Le modal -->
+          <div id="myModal" class="modal">
+
+            <!-- Le contenu du modal -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <p>Contenu du modal...</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <main>
+      <div class="liste_categories">
+        <div class="categorie">
+          <h3 class="categorie_nom">Films les mieux notés</h3>
+
+          <div class="liste_film">
+            <i class="fas fa-solid fa-arrow-left fleche"></i>
+
+            <section class="fiches"></section>
+
+            <div class="image_film">
+              <img src="#" alt="image_film" id="image" />
+            </div>
+
+            <div class="modal"></div>
+
+            <i class="fas fa-solid fa-arrow-right fleche"></i>
+          </div>
+        </div>
+
+        <!-- <div class="categorie">
+          <h3 class="categorie_nom">Catégorie 1</h3>
+          <div class="liste_film">
+            <i class="fas fa-solid fa-arrow-left fleche"></i>
+            <div class="film"></div>
+            <i class="fas fa-solid fa-arrow-right fleche"></i>
+          </div>
+        </div> -->
+
+        <!-- <div class="categorie">
+          <h3 class="categorie_nom">Catégorie 2</h3>
+          <div class="liste_film">
+            <i class="fas fa-solid fa-arrow-left fleche"></i>
+            <div class="film"></div>
+            <i class="fas fa-solid fa-arrow-right fleche"></i>
+          </div>
+        </div>
+
+        <div class="categorie">
+          <h3 class="categorie_nom">Catégorie 3</h3>
+          <div class="liste_film">
+            <i class="fas fa-solid fa-arrow-left fleche"></i>
+            <div class="film"></div>
+            <i class="fas fa-solid fa-arrow-right fleche"></i>
+          </div>
+        </div> -->
+      </div>
+    </main>
+    <footer></footer>
+    <script src="./src/index.js"></script>
+  </body>
+</html>

@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+* {
+  font-family: "Inter", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+}
+.nav_container {
+  color: white;
+  font-size: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: grey;
+  height: 200px;
+  padding: 50px;
+}
+.lien {
+  text-decoration: none;
+  color: white;
+  padding: 20px;
+}
+.lien:hover {
+  color: rgb(73, 73, 73);
+}
+ul {
+  list-style-type: none;
+  text-decoration: none;
+  display: flex;
+}
+.carrousel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 600px;
+  overflow: hidden;
+  position: relative;
+}
+.carrousel img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.carrousel_infos {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  bottom: 0;
+  left: 0;
+  padding: 60px;
+  font-size: 20px;
+  color: white;
+}
+.carrousel_infos h2 {
+  margin-bottom: 20px;
+}
+.carrousel_infos button {
+  background-color: rgb(204, 18, 18);
+  font-weight: bold;
+  border: none;
+  padding: 10px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.1s ease-in-out;
+  margin-bottom: 20px;
+}
+.carrousel_infos button:hover {
+  transform: scale(1.1);
+}
+.carrousel_infos p {
+  margin-bottom: 20px;
+}
+main {
+  padding: 50px;
+}
+
+
+.categorie {
+  height: 300px;
+}
+.categorie_nom {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+.liste_film {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0px 50px;
+}
+.film {
+  border: 2px solid black;
+  height: 200px;
+  width: 370px;
+}
+.fleche{
+    font-size:40px
+}
+ /* Style pour le modal */
+ #myModal {
+  display: none; /* Masquer par défaut */
+  position: fixed; /* Position fixe */
+  z-index: 1; /* Mettre au-dessus du reste du contenu */
+  left: 0;
+  top: 0;
+  width: 100%; /* Couvrir toute la largeur */
+  height: 100%; /* Couvrir toute la hauteur */
+  overflow: auto; /* Permettre le défilement */
+  background-color: rgba(0, 0, 0, 0.4); /* Fond sombre semi-transparent */
+}
+
+/* Style pour le contenu du modal */
+#myModal .modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* Centrer verticalement */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Largeur du contenu */
+}
+/* Style pour le bouton de fermeture */
+#myModal .close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#myModal .close:hover,
+#myModal .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
