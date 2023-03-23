@@ -9,7 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JustStreamIt - Accueil</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./src/style.css" />
     <script
       src="https://kit.fontawesome.com/051e9bb83a.js"
       crossorigin="anonymous"
@@ -30,25 +30,36 @@
 
     <section>
       <div class="cover_movie">
-        <img src="#" alt="Meilleur film" />
-
-
         <div class="cover_movie_infos">
+          <img src="#" alt="Meilleur film" />
           <h2 class="cover_title"></h2>
+          <p class="cover_description"></p>
 
-          <button id="myBtn">Ouvrir le modal</button>
-          
-          <!-- Le modal -->
-          <div id="myModal" class="modal">
-
-            <!-- Le contenu du modal -->
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <p>Contenu du modal...</p>
-            </div>
-          </div>
+          <button id="myBtn">
+            <i class="fas fa-info-circle"></i> Plus d'Infos
+          </button>
         </div>
 
+        <!-- Le modal -->
+        <div id="myModal" class="modal">
+          <!-- Le contenu du modal -->
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <img class="image" src="#" alt="film" />
+            <p class="title"></p>
+            <p class="genre"></p>
+            <p class="rated"></p>
+            <p class="imdb_score"></p>
+            <p class="director"></p>
+            <p class="cast_list"></p>
+            <p class="duration"></p>
+            <p class="country"></p>
+            <p class="box_office"></p>
+            <p class="summary"></p>
+
+            <!-- <p class ="description"></p> -->
+          </div>
+        </div>
       </div>
     </section>
 
