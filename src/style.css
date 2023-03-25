@@ -81,15 +81,15 @@ section {
 
 /* Style pour le contenu du modal */
 #myModal .modal-content {
-  background-color: #fefefe;
+  background-color: white;
   margin: 15% auto; /* Centrer verticalement */
   padding: 20px;
   border: 1px solid #888;
-  width: 70%;
+  width: 60%;
 }
 /* Style pour le bouton de fermeture */
 #myModal .close {
-  color: #aaa;
+  color: grey;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -105,67 +105,44 @@ section {
   cursor: pointer;
 }
 
-.carrousel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 600px;
-  overflow: hidden;
+.carousel {
   position: relative;
-}
-.carrousel img {
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  overflow: hidden;
 }
-.carrousel_infos {
-  position: absolute;
+
+.carousel-container {
   display: flex;
-  flex-direction: column;
-  bottom: 0;
-  left: 0;
-  padding: 60px;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item {
+  flex: 0 0 25%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.carousel-item img {
+  width: 100%;
+}
+
+.carousel-prev,
+.carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 20px;
   color: white;
-}
-.carrousel_infos h2 {
-  margin-bottom: 20px;
-}
-.carrousel_infos button {
-  background-color: rgb(204, 18, 18);
-  font-weight: bold;
-  border: none;
+  text-decoration: none;
+  background-color: rgba(0,0,0,0.5);
   padding: 10px;
-  border-radius: 40px;
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-  margin-bottom: 20px;
+  border-radius: 5px;
 }
-.carrousel_infos button:hover {
-  transform: scale(1.1);
+
+.carousel-prev {
+  left: 10px;
 }
-.carrousel_infos p {
-  margin-bottom: 20px;
-}
-.categorie {
-  height: 300px;
-}
-.categorie_nom {
-  display: flex;
-  justify-content: center;
-  padding-bottom: 30px;
-}
-.liste_film {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0px 50px;
-}
-.film {
-  border: 2px solid black;
-  height: 200px;
-  width: 370px;
-}
-.fleche {
-  font-size: 40px;
+
+.carousel-next {
+  right: 10px;
 }
