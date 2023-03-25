@@ -26,16 +26,6 @@ async function bestMovie() {
     coverMovie.src = data.results[0].image_url;
     coverTitle.innerHTML = data.results[0].title;
 
-    // test pour carousel
-    let testCarousel1 = document.querySelector(".carousel_item img")
-    testCarousel1.src = data.results[1].image_url;
-    let testCarousel2 = document.querySelector(".carousel_item img")
-    testCarousel2.src = data.results[2].image_url;
-    let testCarousel3 = document.querySelector(".carousel_item img")
-    testCarousel3.src = data.results[3].image_url;
-    let testCarousel4 = document.querySelector(".carousel_item img")
-    testCarousel4.src = data.results[4].image_url;
-
     // récupération de la description
     const coverReponse = await fetch(data.results[0].url);
     const coverData = await coverReponse.json();
@@ -75,11 +65,8 @@ function createModal() {
     }
   };
 }
-
 // Appeler la fonction pour créer le modal
 createModal();
-
-
 
 class Movie {
   constructor(id) {
@@ -172,55 +159,73 @@ class Movie {
 
 
 
-url_meilleurs_films = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page_size=7"
+url_best_movies = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page_size=7"
 
 class Carousel {
   constructor(carouselElement, images) {
+    // Eléments du carrousel
+
     this.carousel = carouselElement;
     this.container = this.carousel.querySelector(".carousel-container");
     this.prevBtn = this.carousel.querySelector(".carousel-prev");
     this.nextBtn = this.carousel.querySelector(".carousel-next");
+
+    // Initialiser les propriétés du carrousel
     this.items = [];
     this.currentIndex = 0;
     this.itemsPerPage = 4;
 
     // Créer les éléments img à partir des données récupérées
-    for (let i = 0; i < images.length; i++) {
+    for (let image of images) {
       let item = document.createElement("div");
       let img = document.createElement("img");
-      img.src = images[i].image_url;
+      img.src = image.image_url;
       item.classList.add("carousel-item");
       item.appendChild(img);
       this.items.push(item);
       this.container.appendChild(item);
     }
 
+    // Afficher les éléments du carrousel
     this.showItems();
-
+    
+    // Ajouter les écouteurs d'événements pour les boutons 
     this.prevBtn.addEventListener("click", this.prev.bind(this));
     this.nextBtn.addEventListener("click", this.next.bind(this));
   }
 
   showItems() {
-    for (var i = 0; i < this.items.length; i++) {
-      this.items[i].classList.remove("active");
+    // Masquer tous les éléments
+    for (let item of this.items) {
+      item.classList.remove("active");
     }
-    for (var i = this.currentIndex; i < this.currentIndex + this.itemsPerPage; i++) {
+
+    // Afficher les éléments dans la plage d'index actuelle
+    for (let i = this.currentIndex; i < this.currentIndex + this.itemsPerPage; i++) {
       if (this.items[i]) {
         this.items[i].classList.add("active");
       }
     }
   }
 
-  prev() {
+  // Passer à l'élément précédent dans le carrousel
+  prev(event) { 
+    event.preventDefault();
+
+    // Vérifier si l'élément précédent existe
     if (this.currentIndex > 0) {
+      // Décrémenter l'index actuel et déplacer le conteneur en conséquence
       this.currentIndex--;
       this.container.style.transform = "translateX(" + (-this.currentIndex * 25) + "%)";
       this.showItems();
     }
   }
 
-  next() {
+  // Passer à l'élément suivant dans le carrousel
+  next(event) {
+    event.preventDefault();
+
+    // Vérifier si l'élément suivant existe
     if (this.currentIndex < this.items.length - this.itemsPerPage) {
       this.currentIndex++;
       this.container.style.transform = "translateX(" + (-this.currentIndex * 25) + "%)";
@@ -230,14 +235,21 @@ class Carousel {
 }
 
 // Récupérer les données depuis l'API
-fetch(url_meilleurs_films)
-  .then(response => response.json())
-  .then(data => {
-    let images = data.results;
-    // Créer le carrousel avec les images récupérées
-    let carousel = new Carousel(document.querySelector(".carousel"), images);
-  });
+async function fetchAndCreateCarousel() {
+  try {
+    const response = await fetch(url_best_movies);
+    const data = await response.json();
+    const images = data.results;
 
+    // Créer le carrousel avec les images récupérées
+    const carousel = new Carousel(document.querySelector(".carousel"), images);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Appeler la fonction pour récupérer les données et créer le carrousel
+fetchAndCreateCarousel();
 
 
 
