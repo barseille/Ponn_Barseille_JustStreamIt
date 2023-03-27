@@ -6,11 +6,10 @@
   font-weight: bold;
 }
 .logo {
-  font-size: 50px;
+  font-size: 100%;
 }
 .nav_container {
   background: linear-gradient(to bottom, #333333, black);
-
   color: white;
   font-size: 25px;
   display: flex;
@@ -23,6 +22,7 @@
   text-decoration: none;
   color: white;
   padding: 20px;
+  font-size: 70%;
 }
 .lien:hover {
   color: rgb(73, 73, 73);
@@ -104,7 +104,16 @@ section {
   text-decoration: none;
   cursor: pointer;
 }
+main {
+  background-color: black;
+}
+.sous_titre {
+  color: white;
+  display: flex;
+  justify-content: center;
+}
 
+/* carousel */
 .carousel {
   position: relative;
   width: 100%;
@@ -134,10 +143,9 @@ section {
   font-size: 20px;
   color: white;
   text-decoration: none;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
   padding: 10px;
   border-radius: 5px;
-  
 }
 
 .carousel-prev {
