@@ -15,93 +15,87 @@
       crossorigin="anonymous"
     ></script>
   </head>
+
   <body>
-    <header>
-      <nav>
-        <div class="nav_container">
-          <h1 class="logo">JustStreamIt</h1>
-          <ul class="nav_links">
-            <li class=""><a class="lien" href="#">Accueil</a></li>
-            <li><a class="lien" href="#">Catégories</a></li>
-          </ul>
-        </div>
+    <header class="header">
+      <h1 class="logo">JustStreamIt</h1>
+      <nav class="header_menu">
+        <ul class="nav_bar">
+          <li class="nav"><a href="#">Accueil</a></li>
+          <li class="nav"><a href="#">Categories</a></li>
+        </ul>
       </nav>
     </header>
 
-    <section>
-      <div class="cover_movie">
-        <div class="cover_movie_infos">
-          <img src="#" alt="Meilleur film" />
-          <h2 class="cover_title"></h2>
-          <p class="cover_description"></p>
+    <section class="best" id="cover-movie">
+      <div class="cover-movie">
+        <img alt="movie cover" src="#" id="cover-img" />
+      </div>
+      <div class="cover-box">
+        <div>
+          <h2 class="cover-title" id="js_cover-title">""</h2>
+        </div>
 
-          <button id="myBtn">
-            <i class="fas fa-info-circle"></i> Plus d'Infos
+        <div class="cover-infos-box">
+          <p id="js_cover-infos">""</p>
+        </div>
+        <div>
+          <button aria-label="open modal" class="button">
+            <i class="fas fa-info-circle"></i>Plus d'infos
           </button>
         </div>
       </div>
     </section>
 
-    <section>
-      <!-- Le modal -->
-      <div id="myModal" class="modal">
-        <!-- Le contenu du modal -->
-        <div class="modal-content">
-          <span class="close">&times;</span>
-          <img class="image" src="#" alt="film" />
-          <p class="title"></p>
-          <p class="genre"></p>
-          <p class="rated"></p>
-          <p class="imdb_score"></p>
-          <p class="director"></p>
-          <p class="cast_list"></p>
-          <p class="duration"></p>
-          <p class="country"></p>
-          <p class="box_office"></p>
-          <p class="summary"></p>
+    <div class="carousels"></div>
+
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <span aria-label="close modal" class="close">&times;</span>
+        <div>
+          <img alt="movie cover" id="modal-cover" src="#" />
+        </div>
+        <div class="modal-info">
+          <h3 id="modal-title">""</h3>
+          <br />
+
+          <strong>Date de sortie : </strong>
+          <p id="modal-date">""</p>
+          <br />
+
+          <strong>Evaluation : </strong>
+          <p id="modal-rated">""</p>
+          <br />
+
+          <strong>Durée : </strong>
+          <p id="modal-duration">""</p>
+          <br />
+
+          <strong>Genre : </strong>
+          <p class="genres" id="modal-genres">""</p>
+          <br />
+          <strong>Score IMDB : </strong>
+          <p id="modal-imdb">""</p>
+          <br />
+
+          <strong>Réalisateur(s) : </strong>
+          <p id="modal-directors">""</p>
+          <br />
+          <strong>Casting : </strong>
+          <p id="modal-cast">""</p>
+          <br />
+          <strong>Origine : </strong>
+          <p id="modal-country">""</p>
+          <br />
+          <strong>Box-office : </strong>
+          <p id="modal-box-office">""</p>
+          <br />
+          <strong>Résumé : </strong><br />
+          <p id="modal-info">""</p>
         </div>
       </div>
-    </section>
+    </div>
 
-    <main>
-      <div class="categorie_best">
-        <h3 class="sous_titre"> Films les mieux notés</h3>
-      <div class="carousel">
-        <div class="carousel-container"></div>
-        <a class="carousel-prev" href="#"><i class="fa fa-chevron-left"></i></a>
-        <a class="carousel-next" href="#"><i class="fa fa-chevron-right"></i></a>
-      </div>
-      </div>
-
-      <div class="categorie_adventure">
-        <h3 class="sous_titre"> Aventure</h3>
-      <div class="carousel1">
-        <div class="carousel-container"></div>
-        <a class="carousel-prev" href="#"><i class="fa fa-chevron-left"></i></a>
-        <a class="carousel-next" href="#"><i class="fa fa-chevron-right"></i></a>
-      </div>
-      </div>
-
-      <div class="categorie_animation">
-        <h3 class="sous_titre"> Animation</h3>
-      <div class="carousel2">
-        <div class="carousel-container"></div>
-        <a class="carousel-prev" href="#"><i class="fa fa-chevron-left"></i></a>
-        <a class="carousel-next" href="#"><i class="fa fa-chevron-right"></i></a>
-      </div>
-      </div>
-
-      <div class="categorie_action">
-        <h3 class="sous_titre"> Action</h3>
-      <div class="carousel3">
-        <div class="carousel-container"></div>
-        <a class="carousel-prev" href="#"><i class="fa fa-chevron-left"></i></a>
-        <a class="carousel-next" href="#"><i class="fa fa-chevron-right"></i></a>
-      </div>
-      </div>
-   
-    </main>
-    <footer></footer>
     <script src="./src/index.js"></script>
   </body>
 </html>

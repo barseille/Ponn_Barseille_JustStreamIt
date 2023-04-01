@@ -1,288 +1,242 @@
-async function getMovies() {
+// URL de l'API
+const urlBase = "http://localhost:8000/api/v1/titles/";
+
+// Fonction pour récupérer le meilleur film
+async function fetchCoverMovie() {
+  let coverTitle = document.getElementById("js_cover-title");
+  let coverImg = document.getElementById("cover-img");
+  let coverInfo = document.getElementById("js_cover-infos");
+  let coverButton = document.getElementsByClassName("button")[0];
+
   try {
-    const response = await fetch("http://localhost:8000/api/v1/titles/");
-    const dataUrl = await response.json();
-    return dataUrl;
+    // On envoie une requête à l'API pour récupérer les données du meilleur film
+    const response = await fetch(urlBase + "?sort_by=-imdb_score");
+    const data = await response.json();
+
+    // On met à jour les éléments HTML avec les données récupérées
+    coverTitle.innerHTML = data["results"][0].title;
+    coverImg.src = data["results"][0].image_url;
+    coverButton.setAttribute(
+      "onclick",
+      `openModal("${data["results"][0].id}")`
+    );
+
+    // On envoie une deuxième requête à l'API pour récupérer la description du meilleur film
+    const movieResponse = await fetch(data["results"][0].url);
+    const movieData = await movieResponse.json();
+    coverInfo.innerHTML = movieData.description;
   } catch (error) {
+    // En cas d'erreur, on affiche l'erreur dans la console
     console.error(error);
   }
 }
-urlBase = "http://localhost:8000/api/v1/titles/";
 
-class BestMovie {
-  constructor() {
-    this.urlBase = "http://localhost:8000/api/v1/titles/";
-    this.coverImage = document.querySelector(".cover_movie img");
-    this.coverTitle = document.querySelector(".cover_title");
-    this.coverDescription = document.querySelector(".cover_description");
-  }
+// ouvrir le modal sur le clique du film
+function openModal(id) {
+  let modal = document.getElementById("modal");
+  let span = document.getElementsByClassName("close")[0];
+  console.log(span);
 
-  async getBestMovie() {
-    try {
-      // récupération des films par ordre décroissant
-      const response = await fetch(this.urlBase + "?sort_by=-imdb_score");
-      const data = await response.json();
+  fetchModalData(id);
 
-      // vérification si le tableau de résultats est vide
-      if (data.results.length === 0) {
-        console.log("Aucun élément trouvé !");
-        return;
-      }
+  modal.style.display = "block";
 
-      // récupération de l'image
-      this.coverImage.src = data.results[0].image_url;
-
-      // récupération du titre
-      this.coverTitle.innerHTML = data.results[0].title;
-
-      // récupération de l'URL du film
-      const movieUrl = data.results[0].url;
-
-      // récupération de la description
-      const coverReponse = await fetch(movieUrl);
-      const coverData = await coverReponse.json();
-      this.coverDescription.innerHTML = coverData.description;
-    } catch (error) {
-      console.error(error);
-    }
-  }
-}
-const bestMovie = new BestMovie();
-bestMovie.getBestMovie();
-
-class MovieModal {
-  constructor(id) {
-    this.id = id;
-    this.urlBase = "http://localhost:8000/api/v1/titles/";
-    this.coverImage = document.querySelector(".image");
-    this.coverTitle = document.querySelector(".title");
-    this.coverGenre = document.querySelector(".genre");
-    this.coverRated = document.querySelector(".rated");
-    this.coverImdbScore = document.querySelector(".imdb_score");
-    this.coverDirector = document.querySelector(".director");
-    this.coverCastList = document.querySelector(".cast_list");
-    this.coverDuration = document.querySelector(".duration");
-    this.coverCountry = document.querySelector(".country");
-    this.coverBoxOffice = document.querySelector(".box_office");
-    this.coverSummary = document.querySelector(".summary");
-  }
-
-  async fetchMovieData() {
-    try {
-      const response = await fetch(this.urlBase + this.id);
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  displayImage(data) {
-    this.coverImage.src = data.image_url;
-  }
-
-  displayTitle(data) {
-    this.coverTitle.innerHTML = "Titre du film : " + data.title;
-  }
-
-  displayGenre(data) {
-    this.coverGenre.innerHTML = "Genre : " + data.genres;
-  }
-
-  displayRated(data) {
-    this.coverRated.innerHTML = "Evalution : " + data.rated;
-  }
-
-  displayImdbScore(data) {
-    this.coverImdbScore.innerHTML = "Score Imdb : " + data.imdb_score + "/10";
-  }
-
-  displayDirector(data) {
-    this.coverDirector.innerHTML = "Réalisateur(s) : " + data.directors;
-  }
-
-  displayCastList(data) {
-    this.coverCastList.innerHTML = "Casting : " + data.actors;
-  }
-
-  displayDuration(data) {
-    this.coverDuration.innerHTML = "Durée : " + data.duration + " minutes";
-  }
-
-  displayCountry(data) {
-    this.coverCountry.innerHTML = "Origine : " + data.countries;
-  }
-
-  displayBoxOffice(data) {
-    this.coverBoxOffice.innerHTML =
-      "Box-office : " + data.worldwide_gross_income;
-  }
-
-  displaySummary(data) {
-    this.coverSummary.innerHTML = "Description : " + data.long_description;
-  }
-
-  async displayMovieData() {
-    const data = await this.fetchMovieData();
-    if (data) {
-      this.displayImage(data);
-      this.displayTitle(data);
-      this.displayGenre(data);
-      this.displayRated(data);
-      this.displayImdbScore(data);
-      this.displayDirector(data);
-      this.displayCastList(data);
-      this.displayDuration(data);
-      this.displayCountry(data);
-      this.displayBoxOffice(data);
-      this.displaySummary(data);
-    }
-  }
-}
-
-function createModal(id) {
-  // Récupérer le bouton qui ouvre le modal
-  let btn = document.querySelector("#myBtn");
-
-  // Récupérer le modal
-  let modal = document.querySelector("#myModal");
-
-  // Récupérer la croix qui ferme le modal
-  let span = document.querySelector(".close");
-
-  // Lorsque l'utilisateur clique sur le bouton, ouvrir le modal
-  btn.onclick = function () {
-    modal.style.display = "block";
-    const movieModal = new MovieModal(id);
-    movieModal.displayMovieData();
-  };
-
-  // Lorsque l'utilisateur clique sur la croix, fermer le modal
   span.onclick = function () {
     modal.style.display = "none";
   };
 
-  // Lorsque l'utilisateur clique en dehors du modal, fermer le modal
   window.onclick = function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-    }
+    if (event.target === modal) modal.style.display = "none";
   };
 }
 
-// Appeler la fonction pour créer le modal
-createModal(1508669);
-
-class Carousel {
-  constructor(carouselElement, images) {
-    // Eléments du carrousel
-    this.carousel = carouselElement;
-    this.container = this.carousel.querySelector(".carousel-container");
-    this.prevBtn = this.carousel.querySelector(".carousel-prev");
-    this.nextBtn = this.carousel.querySelector(".carousel-next");
-
-    // Initialiser les propriétés du carrousel
-    this.items = [];
-    this.currentIndex = 0;
-    this.itemsPerPage = 4;
-
-    // Créer les éléments img à partir des données récupérées
-    // <div class="carousel-item"> <img src="url"> </div>
-    for (let image of images) {
-      let item = document.createElement("div");
-      let img = document.createElement("img");
-      img.src = image.image_url;
-      item.classList.add("carousel-item");
-      item.appendChild(img);
-      this.items.push(item);
-      this.container.appendChild(item);
-    }
-
-    // Afficher les éléments du carrousel
-    this.showItems();
-
-    // Ajouter les écouteurs d'événements pour les boutons
-    this.prevBtn.addEventListener("click", this.prev.bind(this));
-    this.nextBtn.addEventListener("click", this.next.bind(this));
-  }
-
-  showItems() {
-    // Masquer tous les éléments
-    for (let item of this.items) {
-      item.classList.remove("active");
-    }
-
-    // Afficher les éléments dans la plage d'index actuelle
-    for (
-      let i = this.currentIndex;
-      i < this.currentIndex + this.itemsPerPage;
-      i++
-    ) {
-      if (this.items[i]) {
-        this.items[i].classList.add("active");
-      }
-    }
-  }
-
-  // Passer à l'élément précédent dans le carrousel
-  prev(event) {
-    event.preventDefault();
-
-    // Vérifier si l'élément précédent existe
-    if (this.currentIndex > 0) {
-      // Décrémenter l'index actuel et déplacer le conteneur en conséquence
-      this.currentIndex--;
-      this.container.style.transform =
-        "translateX(" + -this.currentIndex * 25 + "%)";
-      this.showItems();
-    }
-  }
-
-  // Passer à l'élément suivant dans le carrousel
-  next(event) {
-    event.preventDefault();
-
-    // Vérifier si l'élément suivant existe
-    if (this.currentIndex < this.items.length - this.itemsPerPage) {
-      this.currentIndex++;
-      this.container.style.transform =
-        "translateX(" + -this.currentIndex * 25 + "%)";
-      this.showItems();
-    }
-  }
-}
-
-// Récupérer les données depuis l'API
-async function fetchMoviesByGenre(url, categoryClass) {
+async function fetchModalData(id) {
   try {
-    const response = await fetch(url);
+    const response = await fetch(urlBase + id);
     const data = await response.json();
-    const images = data.results;
 
-    // Créer le carrousel avec les images récupérées
-    const carousel = new Carousel(
-      document.querySelector(categoryClass),
-      images
-    );
+    // Mettre à jour les éléments de la boîte de dialogue modale avec les données récupérées
+    document.getElementById("modal-cover").src = data.image_url;
+    document.getElementById("modal-title").innerHTML = data.title;
+    document.getElementById("modal-date").innerHTML = data.date_published;
+    document.getElementById("modal-duration").innerHTML =
+      data.duration + " minutes";
+    document.getElementById("modal-genres").innerHTML = data.genres;
+    document.getElementById("modal-imdb").innerHTML = data.imdb_score + "/10";
+    document.getElementById("modal-directors").innerHTML = data.directors;
+    document.getElementById("modal-cast").innerHTML = data.actors;
+    document.getElementById("modal-country").innerHTML = data.countries;
+    document.getElementById("modal-info").innerHTML = data.long_description;
+
+    let modalRating = document.getElementById("modal-rated");
+    if (data.rated === "Not rated or unkown rating") {
+      modalRating.innerHTML = "Non renseigné";
+    }
+
+    // Mettre à jour l'élément du box-office en fonction des données récupérées
+    let modalBoxOffice = document.getElementById("modal-box-office");
+    if (data["worldwide_gross_income"] == null) {
+      modalBoxOffice.innerHTML = "Non renseigné";
+    }
   } catch (error) {
     console.error(error);
   }
 }
 
-// Appeler la fonction pour récupérer les données et créer le carrousel pour chaque genre
-fetchMoviesByGenre(
-  `${urlBase}?sort_by=-imdb_score&page_size=7`,
-  ".categorie_best"
-);
-fetchMoviesByGenre(
-  `${urlBase}?sort_by=-imdb_score&genre=Adventure&page_size=7`,
-  ".categorie_adventure"
-);
-fetchMoviesByGenre(
-  `${urlBase}?sort_by=-imdb_score&genre=Animation&page_size=7`,
-  ".categorie_animation"
-);
-fetchMoviesByGenre(
-  `${urlBase}?sort_by=-imdb_score&genre=Action&page_size=7`,
-  ".categorie_action"
-);
+/**
+ * Cette fonction récupère les données des films pour une catégorie donnée.
+ * @param {string} name - Le nom de la catégorie.
+ * @param {number} total - Le nombre total de films à récupérer (par défaut 7).
+ * @returns {Array} - Un tableau contenant les données des films.
+ */
+async function fetchCategories(name, total = 7) {
+  // Crée l'URL de la requête pour récupérer les films de la catégorie triés par ordre décroissant
+  const url = urlBase + "?sort_by=-imdb_score&genre=" + name + "&page_size=7";
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Erreur HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const moviesData = data.results;
+
+  // Si le nombre total de films à récupérer est inférieur à la taille du tableau actuel,
+  // on envoie une nouvelle requête pour récupérer les résultats suivants
+  if (total && moviesData.length < total) {
+    const nextResponse = await fetch(data.next);
+
+    // Vérifie si la requête s'est bien passée, sinon renvoie une erreur
+    if (!nextResponse.ok) {
+      throw new Error(`Erreur HTTP ${nextResponse.status}`);
+    }
+
+    // Convertit les résultats en JSON
+    const nextData = await nextResponse.json();
+
+    // Récupère les résultats suivants jusqu'à atteindre le nombre total de films souhaité
+    const nextMoviesData = nextData.results.slice(0, total - moviesData.length);
+
+    // Ajoute les résultats suivants au tableau existant
+    moviesData.push(...nextMoviesData);
+  }
+
+  // Retourne les données des films
+  return moviesData;
+}
+
+/**
+ * Construit un carrousel pour une catégorie spécifique.
+ * @param {string} category - La catégorie de films pour le carrousel.
+ * @param {string} name - Le nom de la catégorie pour les identifiants HTML.
+ */
+
+async function buildCarousel(category, name) {
+  let categorieName = name;
+  if (name === "best") categorieName = "";
+
+  const section = document.createElement("section");
+  section.classList.add("categories");
+
+  const carousel = document.createElement("div");
+  carousel.classList.add("container");
+
+  const categoryTitle = document.createElement("h2");
+  categoryTitle.innerHTML = `Genre : ${category}`;
+  carousel.append(categoryTitle);
+
+  const carouselContainer = document.createElement("div");
+  carouselContainer.classList.add("carousel-container");
+
+  const carouselContent = document.createElement("div");
+  carouselContent.classList.add("carousel-content");
+  carouselContent.setAttribute("id", `${name}-movies`);
+
+  document.querySelector(".carousels").appendChild(section);
+
+  const movies = await fetchCategories(categorieName);
+
+  let i = 0;
+  for (const movie of movies) {
+    // Container pour chaque film
+    const box = document.createElement("div");
+    box.classList.add("box");
+
+    // Création de l'apparence de chaque film
+    const movieCover = document.createElement("img");
+    movieCover.setAttribute("alt", movie.title);
+    movieCover.src = movie.image_url;
+    box.appendChild(movieCover);
+
+    // Création de l'apparence au survole de chaque film
+    const hover_movie = document.createElement("div");
+    hover_movie.classList.add("hover_movie");
+
+    // titre du film au survole
+    const movieTitle = document.createElement("p");
+    movieTitle.innerHTML = movie.title;
+    hover_movie.appendChild(movieTitle);
+
+    // bouton au survole
+    const modalButton = document.createElement("button");
+    modalButton.classList.add("hover-movie-button");
+    modalButton.setAttribute("onclick", `openModal("${movie.id}")`);
+    modalButton.innerHTML = "Plus d'Infos";
+    hover_movie.appendChild(modalButton);
+
+    box.appendChild(hover_movie);
+
+    carouselContent.appendChild(box);
+
+    i++;
+  }
+
+  const controls = document.createElement("div");
+  controls.classList.add("controls");
+
+  const leftButton = document.createElement("button");
+  leftButton.classList.add("left");
+  leftButton.setAttribute("id", name);
+  leftButton.setAttribute("onclick", `moveCarouselRight("${name}")`);
+  leftButton.innerHTML = '<i class="fa fa-chevron-left"></i>';
+  controls.appendChild(leftButton);
+
+  const rightButton = document.createElement("button");
+  rightButton.classList.add("right");
+  rightButton.setAttribute("id", name);
+  rightButton.setAttribute("onclick", `moveCarouselLeft("${name}")`);
+  rightButton.innerHTML = '<i class="fa fa-chevron-right"></i>';
+  controls.appendChild(rightButton);
+
+  carouselContainer.appendChild(carouselContent);
+  carouselContainer.appendChild(controls);
+
+  carousel.appendChild(carouselContainer);
+  section.appendChild(carousel);
+}
+
+window.addEventListener("load", () => {
+  buildCarousel("Films les mieux notés", "best");
+  buildCarousel("Films d'actions", "action");
+  buildCarousel("Films de Comédies", "comedy");
+  buildCarousel("Films d'animations", "animation");
+  fetchCoverMovie();
+});
+
+// Cette fonction permet de déplacer le carrousel vers la gauche
+function moveCarouselLeft(name) {
+  // On récupère le contenu du carrousel, ainsi que les boutons gauche et droite
+  let carrouselContent = document.querySelector("#" + name + "-movies");
+
+  // On déplace le contenu du carrousel vers la gauche en ajustant la valeur de la propriété "left"
+  carrouselContent.style.left = "-60%";
+}
+
+// Cette fonction permet de déplacer le carrousel vers la droite
+function moveCarouselRight(name) {
+  // On récupère le contenu du carrousel, ainsi que les boutons gauche et droite
+  let carrouselContent = document.querySelector("#" + name + "-movies");
+
+  // On déplace le contenu du carrousel vers la droite en ajustant la valeur de la propriété "left"
+  carrouselContent.style.left = "0px";
+}
