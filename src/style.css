@@ -266,3 +266,6 @@ strong {
 .controls button:hover {
   color: rgb(235, 18, 18);
 }
+span:hover {
+  color: rgb(196, 33, 33);
+}

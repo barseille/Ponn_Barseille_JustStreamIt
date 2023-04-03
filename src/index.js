@@ -91,35 +91,16 @@ async function fetchModalData(id) {
  */
 async function fetchCategories(name, total = 7) {
   // Crée l'URL de la requête pour récupérer les films de la catégorie triés par ordre décroissant
-  const url = urlBase + "?sort_by=-imdb_score&genre=" + name + "&page_size=7";
+  const url = `${urlBase}?sort_by=-imdb_score&genre=${name}&page_size=${total}`;
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Erreur HTTP ${response.status}`);
+    console.error(`Erreur HTTP ${response.status}`);
+    return null;
   }
 
   const data = await response.json();
   const moviesData = data.results;
-
-  // Si le nombre total de films à récupérer est inférieur à la taille du tableau actuel,
-  // on envoie une nouvelle requête pour récupérer les résultats suivants
-  if (total && moviesData.length < total) {
-    const nextResponse = await fetch(data.next);
-
-    // Vérifie si la requête s'est bien passée, sinon renvoie une erreur
-    if (!nextResponse.ok) {
-      throw new Error(`Erreur HTTP ${nextResponse.status}`);
-    }
-
-    // Convertit les résultats en JSON
-    const nextData = await nextResponse.json();
-
-    // Récupère les résultats suivants jusqu'à atteindre le nombre total de films souhaité
-    const nextMoviesData = nextData.results.slice(0, total - moviesData.length);
-
-    // Ajoute les résultats suivants au tableau existant
-    moviesData.push(...nextMoviesData);
-  }
 
   // Retourne les données des films
   return moviesData;
@@ -132,30 +113,49 @@ async function fetchCategories(name, total = 7) {
  */
 
 async function buildCarousel(category, name) {
+  // Si le nom de la catégorie est "best",
+  // on utilise une chaîne vide pour le nom de la catégorie
+  // sinon, on utilise le nom de la catégorie fourni.
   let categorieName = name;
-  if (name === "best") categorieName = "";
+  if (name === "best") {
+    categorieName = "";
+  }
 
+  // Créer une section pour le carrousel.
   const section = document.createElement("section");
   section.classList.add("categories");
 
+  // Créer un conteneur pour le carrousel.
   const carousel = document.createElement("div");
   carousel.classList.add("container");
 
+  // Créer un titre pour la catégorie.
   const categoryTitle = document.createElement("h2");
   categoryTitle.innerHTML = `Genre : ${category}`;
   carousel.append(categoryTitle);
 
+  // Créer un conteneur pour les films dans le carrousel.
   const carouselContainer = document.createElement("div");
   carouselContainer.classList.add("carousel-container");
 
+  // Créer un conteneur pour le contenu du carrousel.
   const carouselContent = document.createElement("div");
   carouselContent.classList.add("carousel-content");
   carouselContent.setAttribute("id", `${name}-movies`);
 
   document.querySelector(".carousels").appendChild(section);
 
-  const movies = await fetchCategories(categorieName);
+  let movies = [];
 
+  if (name === "best") {
+    // Obtenir tous les films de la catégorie "best" à partir de l'API
+    movies = await BestMovieCategories();
+  } else {
+    // Obtenir les films de la catégorie spécifiée à partir de l'API
+    movies = await fetchCategories(categorieName);
+  }
+
+  // Boucle à travers chaque film dans la catégorie.
   let i = 0;
   for (const movie of movies) {
     // Container pour chaque film
@@ -177,23 +177,27 @@ async function buildCarousel(category, name) {
     movieTitle.innerHTML = movie.title;
     hover_movie.appendChild(movieTitle);
 
-    // bouton au survole
+    // Ajouter un bouton pour ouvrir une fenêtre modale avec plus d'informations sur le film.
     const modalButton = document.createElement("button");
     modalButton.classList.add("hover-movie-button");
     modalButton.setAttribute("onclick", `openModal("${movie.id}")`);
     modalButton.innerHTML = "Plus d'Infos";
     hover_movie.appendChild(modalButton);
 
+    // Ajouter la boîte d'informations au conteneur du film.
     box.appendChild(hover_movie);
 
+    // Ajouter le conteneur de film au contenu du carrousel.
     carouselContent.appendChild(box);
 
     i++;
   }
 
+  // Création d'un élément HTML pour les contrôles du carrousel
   const controls = document.createElement("div");
   controls.classList.add("controls");
 
+  // Création d'un bouton pour faire défiler le carrousel vers la gauche
   const leftButton = document.createElement("button");
   leftButton.classList.add("left");
   leftButton.setAttribute("id", name);
@@ -201,6 +205,7 @@ async function buildCarousel(category, name) {
   leftButton.innerHTML = '<i class="fa fa-chevron-left"></i>';
   controls.appendChild(leftButton);
 
+  // Création d'un bouton pour faire défiler le carrousel vers la droite
   const rightButton = document.createElement("button");
   rightButton.classList.add("right");
   rightButton.setAttribute("id", name);
@@ -208,18 +213,26 @@ async function buildCarousel(category, name) {
   rightButton.innerHTML = '<i class="fa fa-chevron-right"></i>';
   controls.appendChild(rightButton);
 
+  // Ajout des éléments du carrousel (contenu et contrôles) au conteneur du carrousel
   carouselContainer.appendChild(carouselContent);
   carouselContainer.appendChild(controls);
 
+  // Ajout du conteneur du carrousel au carrousel lui-même
   carousel.appendChild(carouselContainer);
+
+  // Ajout du carrousel à la section des carrousel sur la page HTML
   section.appendChild(carousel);
 }
 
+// Attente du chargement de la page avant de lancer les carrousels
+// et la récupération de la couverture du film en cours de lecture
 window.addEventListener("load", () => {
   buildCarousel("Films les mieux notés", "best");
-  buildCarousel("Films d'actions", "action");
+  buildCarousel("Films en famille", "family");
   buildCarousel("Films de Comédies", "comedy");
   buildCarousel("Films d'animations", "animation");
+
+  // Récupération de la couverture du film en cours de lecture pour l'afficher sur la page
   fetchCoverMovie();
 });
 
@@ -239,4 +252,24 @@ function moveCarouselRight(name) {
 
   // On déplace le contenu du carrousel vers la droite en ajustant la valeur de la propriété "left"
   carrouselContent.style.left = "0px";
+}
+
+// catégories meilleurs films à partir du deuxième film jusqu'aux derniers
+async function BestMovieCategories() {
+  try {
+    const response = await fetch(
+      `${urlBase}?sort_by=-imdb_score&genre=&page_size=8`
+    );
+    const data = await response.json();
+    const bestMovies = [];
+
+    for (let i = 1; i < data.results.length; i++) {
+      bestMovies.push(data.results[i]);
+    }
+
+    return bestMovies;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
