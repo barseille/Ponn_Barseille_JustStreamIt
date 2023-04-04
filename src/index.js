@@ -230,7 +230,7 @@ window.addEventListener("load", () => {
   buildCarousel("Films les mieux notés", "best");
   buildCarousel("Films en famille", "family");
   buildCarousel("Films de Comédies", "comedy");
-  buildCarousel("Films d'animations", "animation");
+  buildCarousel("Films romantiques", "romance");
 
   // Récupération de la couverture du film en cours de lecture pour l'afficher sur la page
   fetchCoverMovie();
