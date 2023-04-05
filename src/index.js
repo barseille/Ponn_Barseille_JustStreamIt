@@ -35,7 +35,6 @@ async function fetchCoverMovie() {
 function openModal(id) {
   let modal = document.getElementById("modal");
   let span = document.getElementsByClassName("close")[0];
-  console.log(span);
 
   fetchModalData(id);
 
