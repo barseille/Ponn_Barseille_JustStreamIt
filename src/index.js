@@ -111,7 +111,6 @@ async function BestMovieCategories() {
  * Cette fonction récupère les données des films pour une catégorie donnée.
 //  * @param {string} name - Le nom de la catégorie.
 //  * @param {number} total - Le nombre total de films à récupérer (par défaut 7).
-//  * @returns {Array} - Un tableau contenant les données des films.
  */
 async function fetchCategories(name, total = 7) {
   // Crée l'URL de la requête pour récupérer les films de la catégorie triés par ordre décroissant
@@ -129,10 +128,8 @@ async function fetchCategories(name, total = 7) {
   // Retourne les données des films
   return moviesData;
 }
-/**
- * category : Nom de la catégorie pour chaque section
- * name : Nom de la catégorie récupérer depuis l'API
- */
+
+
 class CarouselBuilder {
   constructor(category, name) {
     this.category = category;
@@ -141,113 +138,146 @@ class CarouselBuilder {
   }
 
   async build() {
-    // Créer une section pour le carrousel.
-    const section = document.createElement("section");
-    section.classList.add("categories");
+    const section = this.createSection();
+    const carousel = this.createCarousel();
+    const categoryTitle = this.createCategoryTitle();
+    const carouselContainer = this.createCarouselContainer();
+    const carouselContent = this.createCarouselContent();
+    const controls = this.createControls();
+    const leftButton = this.createLeftButton();
+    const rightButton = this.createRightButton();
 
-    // Créer un conteneur pour le carrousel.
-    const carousel = document.createElement("div");
-    carousel.classList.add("container");
-
-    // Créer un titre pour la catégorie.
-    const categoryTitle = document.createElement("h2");
-    categoryTitle.innerHTML = `Genre : ${this.category}`;
-    carousel.append(categoryTitle);
-
-    // Créer un conteneur pour les films dans le carrousel.
-    const carouselContainer = document.createElement("div");
-    carouselContainer.classList.add("carousel-container");
-
-    // Créer un conteneur pour le contenu du carrousel.
-    const carouselContent = document.createElement("div");
-    carouselContent.classList.add("carousel-content");
-    carouselContent.setAttribute("id", `${this.name}-movies`);
-
-    // Création d'un élément HTML pour les contrôles du carrousel
-    const controls = document.createElement("div");
-    controls.classList.add("controls");
-
-    // Création d'un bouton pour faire défiler le carrousel vers la gauche
-    const leftButton = document.createElement("button");
-    leftButton.classList.add("left");
-    leftButton.setAttribute("id", this.name);
-    leftButton.setAttribute("onclick", `moveCarouselRight("${this.name}")`);
-    leftButton.innerHTML = '<i class="fa fa-chevron-left"></i>';
     controls.appendChild(leftButton);
-
-    // Création d'un bouton pour faire défiler le carrousel vers la droite
-    const rightButton = document.createElement("button");
-    rightButton.classList.add("right");
-    rightButton.setAttribute("id", this.name);
-    rightButton.setAttribute("onclick", `moveCarouselLeft("${this.name}")`);
-    rightButton.innerHTML = '<i class="fa fa-chevron-right"></i>';
     controls.appendChild(rightButton);
 
-    // Ajout des éléments du carrousel (contenu et contrôles) au conteneur du carrousel
     carouselContainer.appendChild(carouselContent);
     carouselContainer.appendChild(controls);
 
-    // Ajout du conteneur du carrousel au carrousel lui-même
+    carousel.appendChild(categoryTitle);
     carousel.appendChild(carouselContainer);
 
-    // Ajout du carrousel à la section des carrousel sur la page HTML
     section.appendChild(carousel);
 
     document.querySelector(".carousels").appendChild(section);
 
-    // http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&genre=&page_size=7
     let categorieName = this.name;
     if (this.name === "best") {
       categorieName = "";
     }
 
     if (this.name === "best") {
-      // Obtenir tous les films de la catégorie "best" à partir de l'API
-      this.movies = await BestMovieCategories();
+      this.movies = await this.getBestMovies();
     } else {
-      // Obtenir les films de la catégorie spécifiée à partir de l'API
-      this.movies = await fetchCategories(categorieName);
+      this.movies = await this.fetchCategories(categorieName);
     }
 
-    // Boucle à travers chaque film dans la catégorie.
+    this.addMoviesToCarousel(carouselContent);
+  }
+
+  createSection() {
+    const section = document.createElement("section");
+    section.classList.add("categories");
+    return section;
+  }
+
+  createCarousel() {
+    const carousel = document.createElement("div");
+    carousel.classList.add("container");
+    return carousel;
+  }
+
+  createCategoryTitle() {
+    const categoryTitle = document.createElement("h2");
+    categoryTitle.innerHTML = `Genre : ${this.category}`;
+    return categoryTitle;
+  }
+
+  createCarouselContainer() {
+    const carouselContainer = document.createElement("div");
+    carouselContainer.classList.add("carousel-container");
+    return carouselContainer;
+  }
+
+  createCarouselContent() {
+    const carouselContent = document.createElement("div");
+    carouselContent.classList.add("carousel-content");
+    carouselContent.setAttribute("id", `${this.name}-movies`);
+    return carouselContent;
+  }
+
+  createControls() {
+    const controls = document.createElement("div");
+    controls.classList.add("controls");
+    return controls;
+  }
+
+  createLeftButton() {
+    const leftButton = document.createElement("button");
+    leftButton.classList.add("left");
+    leftButton.setAttribute("id", this.name);
+    leftButton.setAttribute("onclick", `moveCarouselRight("${this.name}")`);
+    leftButton.innerHTML = '<i class="fa fa-chevron-left"></i>';
+    return leftButton;
+  }
+
+  createRightButton() {
+    const rightButton = document.createElement("button");
+    rightButton.classList.add("right");
+    rightButton.setAttribute("id", this.name);
+    rightButton.setAttribute("onclick", `moveCarouselLeft("${this.name}")`);
+    rightButton.innerHTML = '<i class="fa fa-chevron-right"></i>';
+    return rightButton;
+  }
+
+  async getBestMovies() {
+    return await BestMovieCategories();
+  }
+
+  async fetchCategories(category) {
+    return await fetchCategories(category);
+  }
+
+  addMoviesToCarousel(carouselContent) {
     let i = 0;
     for (const movie of this.movies) {
       // Container pour chaque film
       const box = document.createElement("div");
       box.classList.add("box");
-
+  
       // Création de l'apparence de chaque film
       const movieCover = document.createElement("img");
       movieCover.setAttribute("alt", movie.title);
       movieCover.src = movie.image_url;
       box.appendChild(movieCover);
-
+  
       // Création de l'apparence au survole de chaque film
       const hover_movie = document.createElement("div");
       hover_movie.classList.add("hover_movie");
-
+  
       // titre du film au survole
       const movieTitle = document.createElement("p");
       movieTitle.innerHTML = movie.title;
       hover_movie.appendChild(movieTitle);
-
+  
       // Ajouter un bouton pour ouvrir une fenêtre modale avec plus d'informations sur le film.
       const modalButton = document.createElement("button");
       modalButton.classList.add("hover-movie-button");
       modalButton.setAttribute("onclick", `openModal("${movie.id}")`);
       modalButton.innerHTML = "Plus d'Infos";
       hover_movie.appendChild(modalButton);
-
+  
       // Ajouter la boîte d'informations au conteneur du film.
       box.appendChild(hover_movie);
-
+  
       // Ajouter le conteneur de film au contenu du carrousel.
       carouselContent.appendChild(box);
-
+  
       i++;
     }
   }
+  
 }
+
 // instance de chaque catégorie
 bestmovie = new CarouselBuilder("Films les mieux notés", "best");
 bestFamily = new CarouselBuilder("Films en famille", "family");
@@ -258,6 +288,7 @@ bestRomance = new CarouselBuilder("Films romantiques", "romance");
 // Lorsque la page est entièrement chargée,
 // toutes les instructions à l'intérieur de cette fonction sont exécutées.
 window.addEventListener("load", () => {
+
   // Récupération de la couverture du film en cours de lecture pour l'afficher sur la page
   fetchCoverMovie();
 
@@ -266,6 +297,8 @@ window.addEventListener("load", () => {
   bestComedy.build();
   bestRomance.build();
 });
+
+
 
 function moveCarouselLeft(name) {
   // On récupère le contenu du carrousel, ainsi que les boutons gauche et droite
